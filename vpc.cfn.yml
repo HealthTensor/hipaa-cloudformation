@@ -13,6 +13,12 @@ Parameters:
     MaxLength: 18
     Default: 0.0.0.0/0
 
+  ConfigTagParam:
+    Description: Config tag to apply to resources
+    Type: String
+    MinLength: 0
+    MaxLength: 255
+
 Mappings:
 
   # Maps CIDR blocks to VPC and various subnets
@@ -37,8 +43,12 @@ Resources:
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:
-      - Key: Name
-        Value: !Ref "AWS::StackName"
+        - Key: Name
+          Value: !Ref "AWS::StackName"
+        - Key: Role
+          Value: vpc
+        - Key: Config
+          Value: !Ref ConfigTagParam
 
   PublicSubnet1:
     Type: AWS::EC2::Subnet
@@ -47,8 +57,12 @@ Resources:
       CidrBlock: !FindInMap [CIDRMap, Public1, CIDR]
       AvailabilityZone: !Select [ 0, "Fn::GetAZs": !Ref "AWS::Region"]
       Tags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-PublicSubnet1"
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PublicSubnet1"
+        - Key: Role
+          Value: PublicSubnet1
+        - Key: Config
+          Value: !Ref ConfigTagParam
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -57,8 +71,12 @@ Resources:
       CidrBlock: !FindInMap [CIDRMap, Public2, CIDR]
       AvailabilityZone: !Select [ 1, "Fn::GetAZs": !Ref "AWS::Region"]
       Tags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-PublicSubnet2"
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PublicSubnet2"
+        - Key: Role
+          Value: PublicSubnet2
+        - Key: Config
+          Value: !Ref ConfigTagParam
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
@@ -67,8 +85,12 @@ Resources:
       CidrBlock: !FindInMap [CIDRMap, Private1, CIDR]
       AvailabilityZone: !Select [ 0, "Fn::GetAZs": !Ref "AWS::Region"]
       Tags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-PrivateSubnet1"
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PrivateSubnet1"
+        - Key: Role
+          Value: PrivateSubnet1
+        - Key: Config
+          Value: !Ref ConfigTagParam
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
@@ -77,8 +99,12 @@ Resources:
       CidrBlock: !FindInMap [CIDRMap, Private2, CIDR]
       AvailabilityZone: !Select [ 1, "Fn::GetAZs": !Ref "AWS::Region"]
       Tags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-PrivateSubnet2"
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PrivateSubnet2"
+        - Key: Role
+          Value: PrivateSubnet2
+        - Key: Config
+          Value: !Ref ConfigTagParam
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -94,9 +120,10 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       Tags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-public-igw"
-
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-public-igw"
+        - Key: Config
+          Value: !Ref ConfigTagParam
 
   PublicRoute:
     Type: AWS::EC2::Route
@@ -268,8 +295,12 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       Tags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-private-nat"
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-private-nat"
+        - Key: Role
+          Value: NatRouteTable
+        - Key: Config
+          Value: !Ref ConfigTagParam
 
   NatRoute:
     Type: AWS::EC2::Route
@@ -293,6 +324,12 @@ Resources:
 
 
 Outputs:
+
+  ConfigTag:
+    Description: Config tag
+    Value: !Ref ConfigTagParam
+    Export:
+      Name: !Sub "${AWS::StackName}-ConfigTag"
 
   VPCId:
     Description: VPC ID
@@ -347,13 +384,3 @@ Outputs:
     Value: !GetAtt DbSecurityGroup.GroupId
     Export:
       Name: !Sub "${AWS::StackName}-DatabaseGroupID"
-
-
-
-
-
-
-
-
-
-

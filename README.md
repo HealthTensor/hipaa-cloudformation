@@ -1,8 +1,11 @@
-# startup-kit-templates
+# HIPAA Compliant Cloudformation Templates
+
+This is a fork of the
+[AWS Startup Kit CloudFormation templates](https://github.com/awslabs/startup-kit-templates).
 
 The AWS Startup Kit CloudFormation templates create stacks to support well-architected
 workloads on AWS. Components include a VPC, a bastion host, and an (optional) relational
-database.  
+database.
 
 The VPC template is the foundation for everything else. It creates a VPC that includes
 the following network resources:
@@ -13,13 +16,13 @@ the following network resources:
 - Security groups for an app, load balancer, database, and bastion host.
     
 The bastion host is used to provide SSH access to instances with private IP addresses in
-the application's security group.    
+the application's security group.
 
 Optionally, a relational database can be created using the db.cfn.yml template. Either
 a MySQL or PostgreSQL database is created in the Amazon Relational Database Service
 (RDS), which automates much of the heavy lifting of database setup and maintenance.
 Following best practices, the database is created in private subnets concealed from the 
-public Internet.  
+public Internet.
 
 ### USING THE TEMPLATES
 
@@ -44,7 +47,7 @@ Create the stacks in the following order:
 
 **[1] Create the VPC**: select the vpc.cfn.yml template. Pick a relevant stack
 name, and an IP address or address range from which you will allow SSH access
-to the bastion host. Use [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing).
+to the bastion host. Use [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing). The `Config` tag will be applied to all relevant resources.
 
 **[2] Create the bastion**: select the bastion.cfn.yml template. Pick a relevant
 stack name, and then enter the name of your EC2 key pair and the name of the VPC
@@ -68,7 +71,7 @@ to set this up on your local computer, consult the relevant [AWS blog post](http
 
 Since the database is in a private subnet, it also is necessary to connect to it via
 the bastion host using a method such as TCP/IP over SSH. For an example of how 
-to do this with MySQL Workbench, see the [documentation](http://dev.mysql.com/doc/workbench/en/wb-mysql-connections-methods-ssh.html).  
+to do this with MySQL Workbench, see the [documentation](http://dev.mysql.com/doc/workbench/en/wb-mysql-connections-methods-ssh.html).
 
 In that example, you would replace the SSH Hostname with the public DNS name of
 your bastion host, SSH Username with "ec2-user", and SSH Key File with the path 
@@ -79,17 +82,6 @@ corresponding outputs for "DbUser" and "DbPassword" from the Outputs tab.
 
 
 #### Adding an Application
-
-An app template is forthcoming to automate the process of setting up an app in
-AWS Elastic Beanstalk. However, it is not necessary to use an app template to
-leverage the benefits of the other templates. You can add an application on top
-of the infrastructure created in steps [1] to [3] using any technologies of your
-choice.
-
-For example, you can use Elastic Beanstalk to set up a load balanced, highly
-available environment. Alternatively, you can manually set up a load balancer
-and an autoscaling group (ASG). To ensure your app is highly available, make 
-sure to spin up at least two server instances in separate availability zones.  
 
 As you add application components on top of the infrastructure created with the
 templates, make sure that each component is (a) set up in the VPC created in
@@ -104,5 +96,3 @@ instances.
 - Application instances, such as RESTful API servers or web servers, should be
 assigned to the "AppSecurityGroup" so they can talk to the database as
 well as the load balancer, and receive SSH traffic from the bastion host.
-
-
