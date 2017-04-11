@@ -74,6 +74,7 @@ Resources:
     Type: AWS::EC2::EIP
     Properties:
       InstanceId: !Ref BastionHost
+      Domain: vpc
 
 Outputs:
 
