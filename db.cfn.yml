@@ -11,11 +11,11 @@ Parameters:
     AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
 
   DatabaseUser:
-    Default: startupadmin
+    Default: admin
     NoEcho: 'true'
     Type: String
     Description: Database admin account name
-    MinLength: 5
+    MinLength: 4
     MaxLength: 16
     AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
     ConstraintDescription: Name must begin with a letter and contain only alphanumeric characters.
@@ -31,7 +31,7 @@ Parameters:
     ConstraintDescription: Password must contain only alphanumeric characters.
 
   DatabaseName:
-    Default: StartupDB
+    Default: htcs
     Type: String
     Description: Database name
     MinLength: 1
@@ -44,7 +44,7 @@ Parameters:
     Type: String
     Description: Database storage size in gigabytes (GB)
     MinLength: 1
-    AllowedPattern: "[5-9]|[0-9]+"
+    AllowedPattern: "[0-9]+"
     ConstraintDescription: Enter a size of at least 5 GB
     
   DatabaseEngine:
