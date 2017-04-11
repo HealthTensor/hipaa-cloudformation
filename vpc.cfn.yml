@@ -19,6 +19,12 @@ Parameters:
     MinLength: 0
     MaxLength: 255
 
+  InstanceTenancy:
+    Description: The default instance tenancy
+    Type: String
+    AllowedPattern: "default|dedicated"
+    ConstraintDescription: "Allowed values: default or dedicated"
+
 Mappings:
 
   # Maps CIDR blocks to VPC and various subnets
@@ -42,6 +48,7 @@ Resources:
       CidrBlock: !FindInMap [CIDRMap, VPC, CIDR]
       EnableDnsSupport: true
       EnableDnsHostnames: true
+      InstanceTenancy: !Ref InstanceTenancy
       Tags:
         - Key: Name
           Value: !Ref "AWS::StackName"

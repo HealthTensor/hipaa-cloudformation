@@ -48,7 +48,7 @@ Parameters:
     ConstraintDescription: Enter a size of at least 5 GB
     
   DatabaseEngine:
-    Default: mysql
+    Default: postgres
     Type: String
     Description: Database engine, MySQL or PostgreSQL
     ConstraintDescription: Choose an engine from the drop down
@@ -57,7 +57,7 @@ Parameters:
       - postgres
     
   DatabaseInstanceClass:
-    Default: db.t2.micro
+    Default: db.m4.large
     Type: String
     Description: Database instance class, e.g. db.t2.micro (free tier)
     ConstraintDescription: Choose an instance class from the drop down

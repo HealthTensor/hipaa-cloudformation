@@ -53,17 +53,17 @@ Resources:
   BastionHost:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: m4.large
       KeyName: !Ref KeyName
       ImageId: !FindInMap [AMIMap, !Ref "AWS::Region", AMI]
       SubnetId: !ImportValue
         "Fn::Sub": "${NetworkStackName}-PublicSubnet1ID"
-      SecurityGroupIds: !ImportValue
-        "Fn::Sub": "${NetworkStackName}-BastionGroupID"
+      SecurityGroupIds:
+        - !ImportValue
+          "Fn::Sub": "${NetworkStackName}-BastionGroupID"
       Tags:
         - Key: Name
-          Value: !ImportValue
-            "Fn::Sub": "${NetworkStackName}-Bastion"
+          Value: {"Fn::Sub": "${NetworkStackName}-Bastion"}
         - Key: Role
           Value: bastion
         - Key: Config

@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+# The "brain" is intended to be a HIPAA compliant ML box.
+# Brain stack creation prerequisite:  first create an EC2 key pair and a VPC stack.  
+# For details about how to connect to a Linux instance in a private subnet via the
+# bastion, see the following AWS blog post:
+# https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/
+
+Parameters:
+
+  NetworkStackName:
+    Description: Active CloudFormation stack containing VPC resources.
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
+
+  KeyName:
+    Description: EC2 key pair name for host SSH access
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "[\\x20-\\x7E]*"
+    ConstraintDescription: Key pair name can contain only ASCII characters.
+
+Resources:
+
+  BrainHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: m4.2xlarge
+      ImageId: ami-03086b14
+      KeyName: !Ref KeyName
+      SubnetId: !ImportValue
+        "Fn::Sub": "${NetworkStackName}-PrivateSubnet2ID"
+      SecurityGroupIds:
+        - !ImportValue
+          "Fn::Sub": "${NetworkStackName}-AppSecurityGroupID"
+      Tags:
+        - Key: Name
+          Value:
+            "Fn::Sub": "${NetworkStackName}-Brain1"
+        - Key: Role
+          Value: bastion
+        - Key: Config
+          Value: !ImportValue
+            "Fn::Sub": "${NetworkStackName}-ConfigTag"
