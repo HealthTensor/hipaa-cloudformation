@@ -109,6 +109,7 @@ Resources:
       DBInstanceClass: !Ref DatabaseInstanceClass
       AllocatedStorage: !Ref DatabaseSize
       StorageType: gp2
+      StorageEncrypted: true
       MultiAZ: !If [ CreateProdEnv, 'true', 'false' ]
 
   DbSubnetGroup:
