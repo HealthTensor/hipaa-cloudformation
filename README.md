@@ -5,7 +5,7 @@ This is a fork of the
 
 The AWS Startup Kit CloudFormation templates create stacks to support well-architected
 workloads on AWS. Components include a VPC, a bastion host, and optionally a relational
-database and AWS Elastic Beanstalk app.
+database.
 
 The VPC template is the foundation for everything else. It creates a VPC that includes
 the following network resources:
@@ -22,9 +22,7 @@ Optionally, a relational database can be created using the db.cfn.yml template. 
 a MySQL or PostgreSQL database is created in the Amazon Relational Database Service
 (RDS), which automates much of the heavy lifting of database setup and maintenance.
 Following best practices, the database is created in private subnets concealed from the 
-public Internet.  Similarly, the optional app template creates an Elastic Beanstalk app
-with application servers placed in private subnets while the load balancer in front of
-them is placed in public subnets.  The complete architecture is as follows:
+public Internet.  The complete architecture is as follows:
 
 ![Architecture](images/architecture.png)
 
@@ -111,33 +109,6 @@ corresponding outputs for "DbUser" and "DbPassword" from the Outputs tab.
 
 
 #### Adding an Application
-
-Using the app template automates the process of setting up an app in AWS Elastic
-Beanstalk. Additionally, using a Startup Kit sample workload allows you to quickly
-test out your VPC and database setup.
-
-However, you can deploy your own app instead of a Startup Kit sample workload.  If
-you use the app template, keep in mind that it is designed to work with a relational
-database in RDS.  If your own app uses a relational database, the database connection
-string parameters should conform to the naming conventions in the template, or you
-can fork the templates and modify the names.  Similarly, if you're not using a
-relational database at all, you can modify the app template accordingly.
-
-Additionally, it is not necessary to use the app template to leverage the benefits 
-of the other templates. You can add an application on top of the infrastructure created
-in steps [1] to [3] using any technologies of your choice.
-
-For example, you can use the Elastic Beanstalk console to set up a load balanced,
-highly available environment. Alternatively, you can directly set up a load balancer
-and an autoscaling group (ASG) without using Elastic Beanstalk. To ensure your app
-is highly available, make sure to spin up at least two server instances in separate
-availability zones.
-
-As you add application components on top of the infrastructure created with the
-templates, make sure that each component is (a) set up in the VPC created in
-step [1] above, and (b) assigned to the relevant security group created by the
-VPC template. Check the Outputs tab of the CloudFormation console for the IDs
-of the security groups, which will be prefixed with "sg-". In particular:
 
 - Load balancers, such as Application Load Balancers or Classic Load Balancers,
 should be assigned to "ELBSecurityGroup" so they can talk to the application

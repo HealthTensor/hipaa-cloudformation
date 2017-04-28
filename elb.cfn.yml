@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+# The "ELB" component is an elastic load balancer which serves the web-facing components
+# ELB stack creation prerequisite:  first create an EC2 key pair and a VPC stack.  
+
+Parameters:
+
+  NetworkStackName:
+    Description: Active CloudFormation stack containing VPC resources.
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
+
+Resources:
+
+  ELB:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      CrossZone: true
+      Instances:
+        - !ImportValue
+          "Fn::Sub": "${NetworkStackName}-BrainInstanceID"
+      Listeners:
+        - InstancePort: 80
+          InstanceProtocol: http
+          LoadBalancerPort: 80
+          Protocol: http
+        - InstancePort: 443
+          InstanceProtocol: tcp
+          LoadBalancerPort: 443
+          Protocol: tcp
+      LoadBalancerName: !Sub "${NetworkStackName}-ELB"
+      SecurityGroups:
+        - !ImportValue
+          "Fn::Sub": "${NetworkStackName}-ELBSecurityGroupID"
+      Subnets:
+        - !ImportValue
+          "Fn::Sub": "${NetworkStackName}-PublicSubnet2ID"
+      Tags:
+        - Key: Name
+          Value: !Sub "${NetworkStackName}-ELB"
+        - Key: Role
+          Value: elb
+        - Key: Config
+          Value: !ImportValue
+            "Fn::Sub": "${NetworkStackName}-ConfigTag"

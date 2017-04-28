@@ -45,3 +45,11 @@ Resources:
         - Key: Config
           Value: !ImportValue
             "Fn::Sub": "${NetworkStackName}-ConfigTag"
+
+Outputs:
+
+  BrainInstanceID:
+    Description: The Brains Instance ID
+    Value: !Ref BrainHost
+    Export:
+      Name: !Sub "${NetworkStackName}-BrainInstanceID"
