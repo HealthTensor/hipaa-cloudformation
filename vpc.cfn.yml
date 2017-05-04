@@ -174,14 +174,27 @@ Resources:
         IpProtocol: tcp
         ToPort: 80
         FromPort: 80
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: tcp
+        ToPort: 443
+        FromPort: 443
         
-  ELBSecurityGroupToAppEgress:
+  ELBSecurityGroupToAppHTTPEgress:
     Type: AWS::EC2::SecurityGroupEgress  # prevent security group circular references
     Properties:
       GroupId: !Ref ELBSecurityGroup
       IpProtocol: tcp
       ToPort: 80
       FromPort: 80
+      DestinationSecurityGroupId: !Ref AppSecurityGroup
+
+  ELBSecurityGroupToAppHTTPSEgress:
+    Type: AWS::EC2::SecurityGroupEgress  # prevent security group circular references
+    Properties:
+      GroupId: !Ref ELBSecurityGroup
+      IpProtocol: tcp
+      ToPort: 443
+      FromPort: 443
       DestinationSecurityGroupId: !Ref AppSecurityGroup
 
   AppSecurityGroup:
@@ -194,18 +207,31 @@ Resources:
         IpProtocol: tcp
         ToPort: 80
         FromPort: 80
+      - SourceSecurityGroupId: !Ref ELBSecurityGroup
+        IpProtocol: tcp
+        ToPort: 443
+        FromPort: 443
       - SourceSecurityGroupId: !Ref BastionSecurityGroup
         IpProtocol: tcp
         ToPort: 22
         FromPort: 22
 
-  AppSecurityGroupFromELBIngress:
+  AppSecurityGroupFromELBHTTPIngress:
     Type: AWS::EC2::SecurityGroupIngress  # prevent security group circular references
     Properties:
       GroupId: !Ref AppSecurityGroup
       IpProtocol: tcp
       ToPort: 80
       FromPort: 80
+      SourceSecurityGroupId: !Ref ELBSecurityGroup
+
+  AppSecurityGroupFromELBHTTPSIngress:
+    Type: AWS::EC2::SecurityGroupIngress  # prevent security group circular references
+    Properties:
+      GroupId: !Ref AppSecurityGroup
+      IpProtocol: tcp
+      ToPort: 443
+      FromPort: 443
       SourceSecurityGroupId: !Ref ELBSecurityGroup
 
   AppSecurityGroupFromBastionIngress:
