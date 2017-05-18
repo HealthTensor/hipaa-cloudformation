@@ -41,7 +41,7 @@ Resources:
           Value:
             "Fn::Sub": "${NetworkStackName}-Brain1"
         - Key: Role
-          Value: bastion
+          Value: brain
         - Key: Config
           Value: !ImportValue
             "Fn::Sub": "${NetworkStackName}-ConfigTag"
