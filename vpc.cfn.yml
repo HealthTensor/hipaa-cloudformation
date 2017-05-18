@@ -30,15 +30,15 @@ Mappings:
   # Maps CIDR blocks to VPC and various subnets
   CIDRMap:
     VPC:
-      CIDR: 10.50.0.0/16
+      CIDR: 172.16.0.0/16
     Public1:
-      CIDR: 10.50.0.0/24
+      CIDR: 172.16.0.0/24
     Public2:
-      CIDR: 10.50.1.0/24
+      CIDR: 172.16.1.0/24
     Private1:
-      CIDR: 10.50.2.0/24
+      CIDR: 172.16.2.0/24
     Private2:
-      CIDR: 10.50.3.0/24
+      CIDR: 172.16.10.16/28
 
 Resources:
 
