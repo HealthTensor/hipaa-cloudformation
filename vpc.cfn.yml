@@ -215,6 +215,19 @@ Resources:
         IpProtocol: tcp
         ToPort: 22
         FromPort: 22
+      - CidrIp: 166.124.120.0/22
+        IpProtocol: icmp
+        FromPort: -1
+        ToPort: -1
+      SecurityGroupEgress:
+      - CidrIp: 166.124.120.0/22
+        IpProtocol: icmp
+        FromPort: -1
+        ToPort: -1
+      - CidrIp: 166.124.120.0/22
+        IpProtocol: tcp
+        FromPort: 5567
+        ToPort: 5571
 
   AppSecurityGroupFromELBHTTPIngress:
     Type: AWS::EC2::SecurityGroupIngress  # prevent security group circular references
