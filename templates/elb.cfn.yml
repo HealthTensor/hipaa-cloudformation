@@ -20,7 +20,7 @@ Resources:
       CrossZone: true
       Instances:
         - !ImportValue
-          "Fn::Sub": "${NetworkStackName}-BrainInstanceID"
+          "Fn::Sub": "${NetworkStackName}-WebServerID"
       Listeners:
         - InstancePort: 80
           InstanceProtocol: http
@@ -35,6 +35,8 @@ Resources:
         - !ImportValue
           "Fn::Sub": "${NetworkStackName}-ELBSecurityGroupID"
       Subnets:
+        - !ImportValue
+          "Fn::Sub": "${NetworkStackName}-PublicSubnet1ID"
         - !ImportValue
           "Fn::Sub": "${NetworkStackName}-PublicSubnet2ID"
       Tags:

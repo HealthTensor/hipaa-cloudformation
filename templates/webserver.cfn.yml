@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+# The "webserver" is intended to host a HIPAA compliant web services.
+# WebServer stack creation prerequisite:  first create an EC2 key pair and a VPC stack.  
+# For details about how to connect to a Linux instance in a private subnet via the
+# bastion, see the following AWS blog post:
+# https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/
+
+Parameters:
+
+  NetworkStackName:
+    Description: Active CloudFormation stack containing VPC resources.
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
+
+  KeyName:
+    Description: EC2 key pair name for host SSH access
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "[\\x20-\\x7E]*"
+    ConstraintDescription: Key pair name can contain only ASCII characters.
+
+Resources:
+
+  WebServerHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: m4.2xlarge
+      ImageId: ami-6ceaab7b
+      KeyName: !Ref KeyName
+      SubnetId: !ImportValue
+        "Fn::Sub": "${NetworkStackName}-PrivateWebServerSubnet1ID"
+      SecurityGroupIds:
+        - !ImportValue
+          "Fn::Sub": "${NetworkStackName}-AppSecurityGroupID"
+      Tags:
+        - Key: Name
+          Value:
+            "Fn::Sub": "${NetworkStackName}-WebServer"
+        - Key: Role
+          Value: WebServer
+        - Key: Config
+          Value: !ImportValue
+            "Fn::Sub": "${NetworkStackName}-ConfigTag"
+
+Outputs:
+
+  WebServerInstanceID:
+    Description: The WebServer Instance ID
+    Value: !Ref WebServerHost
+    Export:
+      Name: !Sub "${NetworkStackName}-WebServerID"

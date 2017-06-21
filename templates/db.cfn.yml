@@ -40,7 +40,7 @@ Parameters:
     ConstraintDescription: Name must begin with a letter and contain only alphanumeric characters.
     
   DatabaseSize:
-    Default: 5
+    Default: 50
     Type: String
     Description: Database storage size in gigabytes (GB)
     MinLength: 1
@@ -118,9 +118,9 @@ Resources:
       DBSubnetGroupDescription: RDS DB subnet group
       SubnetIds:
       - !ImportValue
-          "Fn::Sub": "${NetworkStackName}-PrivateSubnet1ID"
+          "Fn::Sub": "${NetworkStackName}-PrivateMiscSubnet1ID"
       - !ImportValue
-          "Fn::Sub": "${NetworkStackName}-PrivateSubnet2ID"
+          "Fn::Sub": "${NetworkStackName}-PrivateMiscSubnet2ID"
 
 Outputs:
 

@@ -35,10 +35,22 @@ Mappings:
       CIDR: 172.16.0.0/24
     Public2:
       CIDR: 172.16.1.0/24
-    Private1:
+    PrivateMisc1:
       CIDR: 172.16.2.0/24
-    Private2:
+    PrivateMisc2:
+      CIDR: 172.16.3.0/24
+    PrivateWebServer1:
+      CIDR: 172.16.4.0/24
+    PrivateWebServer2:
+      CIDR: 172.16.5.0/24
+    PrivateWorker1:
+      CIDR: 172.16.6.0/24
+    PrivateWorker2:
+      CIDR: 172.16.7.0/24
+    PrivateCesium1:
       CIDR: 172.16.10.16/28
+    PrivateCesium2:
+      CIDR: 172.16.11.0/28
 
 Resources:
 
@@ -67,7 +79,7 @@ Resources:
         - Key: Name
           Value: !Sub "${AWS::StackName}-PublicSubnet1"
         - Key: Role
-          Value: PublicSubnet1
+          Value: PublicSubnet
         - Key: Config
           Value: !Ref ConfigTagParam
 
@@ -81,35 +93,119 @@ Resources:
         - Key: Name
           Value: !Sub "${AWS::StackName}-PublicSubnet2"
         - Key: Role
-          Value: PublicSubnet2
+          Value: PublicSubnet
         - Key: Config
           Value: !Ref ConfigTagParam
 
-  PrivateSubnet1:
+  PrivateMiscSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: !FindInMap [CIDRMap, Private1, CIDR]
+      CidrBlock: !FindInMap [CIDRMap, PrivateMisc1, CIDR]
       AvailabilityZone: !Select [ 0, "Fn::GetAZs": !Ref "AWS::Region"]
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-PrivateSubnet1"
+          Value: !Sub "${AWS::StackName}-PrivateMiscSubnet1"
         - Key: Role
-          Value: PrivateSubnet1
+          Value: PrivateMiscSubnet
         - Key: Config
           Value: !Ref ConfigTagParam
 
-  PrivateSubnet2:
+  PrivateMiscSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: !FindInMap [CIDRMap, Private2, CIDR]
+      CidrBlock: !FindInMap [CIDRMap, PrivateMisc2, CIDR]
       AvailabilityZone: !Select [ 1, "Fn::GetAZs": !Ref "AWS::Region"]
       Tags:
         - Key: Name
-          Value: !Sub "${AWS::StackName}-PrivateSubnet2"
+          Value: !Sub "${AWS::StackName}-PrivateMiscSubnet2"
         - Key: Role
-          Value: PrivateSubnet2
+          Value: PrivateMiscSubnet
+        - Key: Config
+          Value: !Ref ConfigTagParam
+
+  PrivateWebServerSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap [CIDRMap, PrivateWebServer1, CIDR]
+      AvailabilityZone: !Select [ 0, "Fn::GetAZs": !Ref "AWS::Region"]
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PrivateWebServerSubnet1"
+        - Key: Role
+          Value: PrivateWebServerSubnet
+        - Key: Config
+          Value: !Ref ConfigTagParam
+
+  PrivateWebServerSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap [CIDRMap, PrivateWebServer2, CIDR]
+      AvailabilityZone: !Select [ 1, "Fn::GetAZs": !Ref "AWS::Region"]
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PrivateWebServerSubnet2"
+        - Key: Role
+          Value: PrivateWebServerSubnet
+        - Key: Config
+          Value: !Ref ConfigTagParam
+
+  PrivateWorkerSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap [CIDRMap, PrivateWorker1, CIDR]
+      AvailabilityZone: !Select [ 0, "Fn::GetAZs": !Ref "AWS::Region"]
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PrivateWorkerSubnet1"
+        - Key: Role
+          Value: PrivateWorkerSubnet
+        - Key: Config
+          Value: !Ref ConfigTagParam
+
+  PrivateWorkerSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap [CIDRMap, PrivateWorker2, CIDR]
+      AvailabilityZone: !Select [ 1, "Fn::GetAZs": !Ref "AWS::Region"]
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PrivateWorkerSubnet2"
+        - Key: Role
+          Value: PrivateWorkerSubnet
+        - Key: Config
+          Value: !Ref ConfigTagParam
+
+  PrivateCesiumSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap [CIDRMap, PrivateCesium1, CIDR]
+      AvailabilityZone: !Select [ 0, "Fn::GetAZs": !Ref "AWS::Region"]
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PrivateCesiumSubnet1"
+        - Key: Role
+          Value: PrivateCesiumSubnet
+        - Key: Config
+          Value: !Ref ConfigTagParam
+
+  PrivateCesiumSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !FindInMap [CIDRMap, PrivateCesium2, CIDR]
+      AvailabilityZone: !Select [ 1, "Fn::GetAZs": !Ref "AWS::Region"]
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-PrivateCesiumSubnet2"
+        - Key: Role
+          Value: PrivateCesiumSubnet
         - Key: Config
           Value: !Ref ConfigTagParam
 
@@ -179,7 +275,7 @@ Resources:
         ToPort: 443
         FromPort: 443
         
-  ELBSecurityGroupToAppHTTPEgress:
+  ELBSecurityGroupToWebServerHTTPEgress:
     Type: AWS::EC2::SecurityGroupEgress  # prevent security group circular references
     Properties:
       GroupId: !Ref ELBSecurityGroup
@@ -197,20 +293,12 @@ Resources:
       FromPort: 443
       DestinationSecurityGroupId: !Ref AppSecurityGroup
 
-  AppSecurityGroup:
+  CesiumSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable access from ELB to app
+      GroupDescription: Access for Cesium VPN tunnel
       VpcId: !Ref VPC
       SecurityGroupIngress:
-      - SourceSecurityGroupId: !Ref ELBSecurityGroup
-        IpProtocol: tcp
-        ToPort: 80
-        FromPort: 80
-      - SourceSecurityGroupId: !Ref ELBSecurityGroup
-        IpProtocol: tcp
-        ToPort: 443
-        FromPort: 443
       - SourceSecurityGroupId: !Ref BastionSecurityGroup
         IpProtocol: tcp
         ToPort: 22
@@ -237,6 +325,33 @@ Resources:
         FromPort: 443
         ToPort: 443
 
+  AppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable access from ELB to app
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+      - SourceSecurityGroupId: !Ref ELBSecurityGroup
+        IpProtocol: tcp
+        ToPort: 80
+        FromPort: 80
+      - SourceSecurityGroupId: !Ref ELBSecurityGroup
+        IpProtocol: tcp
+        ToPort: 443
+        FromPort: 443
+      - SourceSecurityGroupId: !Ref BastionSecurityGroup
+        IpProtocol: tcp
+        ToPort: 22
+        FromPort: 22
+      SecurityGroupEgress:
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
 
   AppSecurityGroupFromELBHTTPIngress:
     Type: AWS::EC2::SecurityGroupIngress  # prevent security group circular references
@@ -298,6 +413,15 @@ Resources:
       ToPort: 5432
       FromPort: 3306
       DestinationSecurityGroupId: !Ref DbSecurityGroup
+
+  BastionSecurityGroupToCesiumEgress:
+    Type: AWS::EC2::SecurityGroupEgress  # prevent security group circular references
+    Properties:
+      GroupId: !Ref BastionSecurityGroup
+      IpProtocol: tcp
+      ToPort: 22
+      FromPort: 22
+      DestinationSecurityGroupId: !Ref CesiumSecurityGroup
 
   DbSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -370,18 +494,73 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref NatGateway
 
-  PrivateSubnetRouteTableAssociation1:
+  PrivateMiscSubnetRouteTableAssociation1:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet1
+      SubnetId: !Ref PrivateMiscSubnet1
       RouteTableId: !Ref NatRouteTable
 
-  PrivateSubnetRouteTableAssociation2:
+  PrivateMiscSubnetRouteTableAssociation2:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet2
+      SubnetId: !Ref PrivateMiscSubnet2
       RouteTableId: !Ref NatRouteTable
 
+  PrivateWebServerSubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateWebServerSubnet1
+      RouteTableId: !Ref NatRouteTable
+
+  PrivateWebServerSubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateWebServerSubnet2
+      RouteTableId: !Ref NatRouteTable
+
+  PrivateWorkerSubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateWorkerSubnet1
+      RouteTableId: !Ref NatRouteTable
+
+  PrivateWorkerSubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateWorkerSubnet2
+      RouteTableId: !Ref NatRouteTable
+
+  CesiumRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-private-cesium-route"
+        - Key: Role
+          Value: CesiumRouteTable
+        - Key: Config
+          Value: !Ref ConfigTagParam
+
+  CesiumNatRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref CesiumRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway
+
+  PrivateCesiumSubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateCesiumSubnet1
+      RouteTableId: !Ref CesiumRouteTable
+
+  PrivateCesiumSubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateCesiumSubnet2
+      RouteTableId: !Ref CesiumRouteTable
 
 Outputs:
 
@@ -409,17 +588,53 @@ Outputs:
     Export:
       Name: !Sub "${AWS::StackName}-PublicSubnet2ID"
 
-  PrivateSubnet1:
-    Description: Private subnet 1 ID
-    Value: !Ref PrivateSubnet1
+  PrivateMiscSubnet1:
+    Description: Private misc subnet 1 ID
+    Value: !Ref PrivateMiscSubnet1
     Export:
-      Name: !Sub "${AWS::StackName}-PrivateSubnet1ID"
+      Name: !Sub "${AWS::StackName}-PrivateMiscSubnet1ID"
 
-  PrivateSubnet2:
-    Description: Private subnet 2 ID
-    Value: !Ref PrivateSubnet2
+  PrivateMiscSubnet2:
+    Description: Private misc subnet 2 ID
+    Value: !Ref PrivateMiscSubnet2
     Export:
-      Name: !Sub "${AWS::StackName}-PrivateSubnet2ID"
+      Name: !Sub "${AWS::StackName}-PrivateMiscSubnet2ID"
+
+  PrivateWebServerSubnet1:
+    Description: Private webserver subnet 1 ID
+    Value: !Ref PrivateWebServerSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateWebServerSubnet1ID"
+
+  PrivateWebServerSubnet2:
+    Description: Private webserver subnet 2 ID
+    Value: !Ref PrivateWebServerSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateWebServerSubnet2ID"
+
+  PrivateWorkerSubnet1:
+    Description: Private worker subnet 1 ID
+    Value: !Ref PrivateWorkerSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateWorkerSubnet1ID"
+
+  PrivateWorkerSubnet2:
+    Description: Private worker subnet 2 ID
+    Value: !Ref PrivateWorkerSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateWorkerSubnet2ID"
+
+  PrivateCesiumSubnet1:
+    Description: Private Cesium subnet 1 ID
+    Value: !Ref PrivateCesiumSubnet1
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateCesiumSubnet1ID"
+
+  PrivateCesiumSubnet2:
+    Description: Private Cesium subnet 2 ID
+    Value: !Ref PrivateCesiumSubnet2
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateCesiumSubnet2ID"
 
   ELBSecurityGroup:
     Description: Security group ID for Internet-facing ELB
@@ -432,6 +647,12 @@ Outputs:
     Value: !GetAtt AppSecurityGroup.GroupId
     Export:
       Name: !Sub "${AWS::StackName}-AppSecurityGroupID"
+
+  CesiumSecurityGroup:
+    Description: Security group ID for Cesium tunneler
+    Value: !GetAtt CesiumSecurityGroup.GroupId
+    Export:
+      Name: !Sub "${AWS::StackName}-CesiumSecurityGroupID"
 
   BastionSecurityGroup:
     Description: Security group ID for bastion host

@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+# The "tunneler" is intended to be a HIPAA compliant bridge server for communicating
+# with third party services.
+# Tunneler stack creation prerequisite:  first create an EC2 key pair and a VPC stack.  
+# For details about how to connect to a Linux instance in a private subnet via the
+# bastion, see the following AWS blog post:
+# https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/
+
+Parameters:
+
+  NetworkStackName:
+    Description: Active CloudFormation stack containing VPC resources.
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$"
+
+  KeyName:
+    Description: EC2 key pair name for host SSH access
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: "[\\x20-\\x7E]*"
+    ConstraintDescription: Key pair name can contain only ASCII characters.
+
+Resources:
+
+  Tunneler:
+    Type: AWS::EC2::Instance
+    Properties:
+      # NB: an m4 server has an improved networking stack over t2
+      InstanceType: m4.large
+      ImageId: ami-6ceaab7b
+      KeyName: !Ref KeyName
+      SubnetId: !ImportValue
+        "Fn::Sub": "${NetworkStackName}-PrivateCesiumSubnet1ID"
+      SecurityGroupIds:
+        - !ImportValue
+          "Fn::Sub": "${NetworkStackName}-CesiumSecurityGroupID"
+      Tags:
+        - Key: Name
+          Value:
+            "Fn::Sub": "${NetworkStackName}-Tunneler"
+        - Key: Role
+          Value: tunneler
+        - Key: Config
+          Value: !ImportValue
+            "Fn::Sub": "${NetworkStackName}-ConfigTag"
+
+Outputs:
+
+  TunnelerInstanceID:
+    Description: The Tunneler Instance ID
+    Value: !Ref Tunneler
+    Export:
+      Name: !Sub "${NetworkStackName}-TunnelerInstanceID"
