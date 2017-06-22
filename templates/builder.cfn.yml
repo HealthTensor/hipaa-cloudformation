@@ -29,10 +29,10 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: m4.large
-      ImageId: ami-6ceaab7b
+      ImageId: ami-d15a75c7
       KeyName: !Ref KeyName
       SubnetId: !ImportValue
-        "Fn::Sub": "${NetworkStackName}-PrivateMiscSubnet1ID"
+        "Fn::Sub": "${NetworkStackName}-PrivateMiscSubnet2ID"
       SecurityGroupIds:
         - !ImportValue
           "Fn::Sub": "${NetworkStackName}-AppSecurityGroupID"

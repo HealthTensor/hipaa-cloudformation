@@ -31,7 +31,7 @@ Resources:
     Properties:
       # NB: an m4 server has an improved networking stack over t2
       InstanceType: m4.large
-      ImageId: ami-6ceaab7b
+      ImageId: ami-d15a75c7
       KeyName: !Ref KeyName
       SubnetId: !ImportValue
         "Fn::Sub": "${NetworkStackName}-PrivateCesiumSubnet1ID"
