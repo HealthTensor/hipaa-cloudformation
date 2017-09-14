@@ -352,6 +352,14 @@ Resources:
         IpProtocol: tcp
         FromPort: 443
         ToPort: 443
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: icmp
+        ToPort: -1
+        FromPort: -1
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: 58
+        ToPort: -1
+        FromPort: -1
 
   AppSecurityGroupFromELBHTTPIngress:
     Type: AWS::EC2::SecurityGroupIngress  # prevent security group circular references
