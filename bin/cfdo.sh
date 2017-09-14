@@ -7,6 +7,7 @@ cfdo.sh COMMAND CLUSTER ROLE
     deploy
     delete
   CLUSTER
+    CesiumTest
     CesiumDev
   ROLE:
     VPC
@@ -39,7 +40,7 @@ case "$COMMAND" in
     create)
         case "$TARGET" in
             VPC)
-                echo aws cloudformation create-stack \
+                aws cloudformation create-stack \
                      --stack-name "$VPC_ID" \
                      --template-body "file://$TEMPLATES_DIR/vpc.cfn.yml" \
                      --parameters ParameterKey=ConfigTagParam,ParameterValue="$(lookup ConfigTagParam $CLUSTER)" \
@@ -50,7 +51,8 @@ case "$COMMAND" in
                     --stack-name "$STACK_NAME" \
                     --template-body "file://$TEMPLATES_DIR/bastion.cfn.yml" \
                     --parameters ParameterKey=NetworkStackName,ParameterValue="$VPC_ID" \
-                    ParameterKey=KeyName,ParameterValue="$(lookup KeyName research-bastion)"
+                    ParameterKey=KeyName,ParameterValue="$(lookup KeyName research-bastion)" \
+                    ParameterKey=InstanceType,ParameterValue="$(lookup InstanceType m4.large)"
                 ;;
             DB)
                 echo "Enter database password:"
@@ -59,9 +61,10 @@ case "$COMMAND" in
                     --stack-name "$STACK_NAME" \
                     --template-body "file://$TEMPLATES_DIR/db.cfn.yml" \
                     --parameters ParameterKey=NetworkStackName,ParameterValue="$VPC_ID" \
+                    ParameterKey=DatabaseInstanceClass,ParameterValue=$(lookup DatabaseInstanceClass db.m4.large) \
                     ParameterKey=DatabaseUser,ParameterValue=$(lookup DatabaseUser htcs) \
                     ParameterKey=DatabasePassword,ParameterValue="$DB_PASSWORD" \
-                    ParameterKey=DatabaseName,ParameterValue=$(lookup DatabaseUser htcs) \
+                    ParameterKey=DatabaseSize,ParameterValue=$(lookup DatabaseSize 50) \
                     ParameterKey=EnvironmentName,ParameterValue=$(lookup EnvironmentName dev)
                 ;;
             WebServer)
@@ -69,7 +72,8 @@ case "$COMMAND" in
                     --stack-name "$STACK_NAME" \
                     --template-body "file://$TEMPLATES_DIR/webserver.cfn.yml" \
                     --parameters ParameterKey=NetworkStackName,ParameterValue="$VPC_ID" \
-                    ParameterKey=KeyName,ParameterValue="$(lookup KeyName research-bastion)"
+                    ParameterKey=KeyName,ParameterValue="$(lookup KeyName research-bastion)" \
+                    ParameterKey=InstanceType,ParameterValue="$(lookup InstanceType m4.large)"
                 ;;
             Tunneler)
                 aws cloudformation create-stack \
@@ -83,7 +87,8 @@ case "$COMMAND" in
                     --stack-name "$STACK_NAME" \
                     --template-body "file://$TEMPLATES_DIR/builder.cfn.yml" \
                     --parameters ParameterKey=NetworkStackName,ParameterValue="$VPC_ID" \
-                    ParameterKey=KeyName,ParameterValue="$(lookup KeyName research-bastion)"
+                    ParameterKey=KeyName,ParameterValue="$(lookup KeyName research-bastion)" \
+                    ParameterKey=InstanceType,ParameterValue="$(lookup InstanceType m4.large)"
                 ;;
             ELB)
                 aws cloudformation create-stack \

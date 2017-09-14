@@ -23,12 +23,33 @@ Parameters:
     AllowedPattern: "[\\x20-\\x7E]*"
     ConstraintDescription: Key pair name can contain only ASCII characters.
 
+  InstanceType:
+    Default: m4.large
+    Type: String
+    Description: Builder instance type, e.g. t2.micro (free tier)
+    ConstraintDescription: Choose an instance class from the drop down
+    AllowedValues: 
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+
 Resources:
 
   BuilderHost:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: m4.large
+      InstanceType: !Ref InstanceType
       ImageId: ami-d15a75c7
       KeyName: !Ref KeyName
       SubnetId: !ImportValue

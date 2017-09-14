@@ -384,7 +384,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress  # prevent security group circular references
     Properties:
       GroupId: !Ref AppSecurityGroup
-      InProtocol: tcp
+      IpProtocol: tcp
       ToPort: 5432
       FromPort: 5432
       SourceSecurityGroupId: !Ref DbSecurityGroup

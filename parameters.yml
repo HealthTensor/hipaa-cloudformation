@@ -2,3 +2,19 @@
 CesiumDev:
   DB:
     EnvironmentName: dev
+CesiumTest:
+  VPC:
+    InstanceTenancy: default
+  Bastion:
+    KeyName: cesium-test
+    InstanceType: t2.small
+  DB:
+    DatabaseSize: 5
+    DatabaseInstanceClass: db.t2.small
+    EnvironmentName: dev
+  WebServer:
+    KeyName: cesium-test
+    InstanceType: t2.small
+  Builder:
+    KeyName: cesium-test
+    InstanceType: t2.small
